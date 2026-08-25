@@ -1,0 +1,7 @@
+# PayMongo Test Secret Key (starts with sk_test_)
+# Get this from: https://dashboard.paymongo.com/developers/api-keys
+PAYMONGO_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+
+# Service Configuration
+PORT=3003
+NODE_ENV=development
