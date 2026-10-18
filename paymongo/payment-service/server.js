@@ -55,6 +55,7 @@ app.post('/api/payment/checkout', async (req, res) => {
     const payload = {
       data: {
         attributes: {
+          payment_method_types: ['card', 'gcash'],
           line_items: lineItems,
           success_url: successUrl || 'https://example.com/success',
           cancel_url: cancelUrl || 'https://example.com/cancel',

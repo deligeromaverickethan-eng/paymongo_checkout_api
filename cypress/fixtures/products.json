@@ -1,0 +1,7 @@
+[
+  { "id": "p1", "name": "SIAI T-Shirt",         "centavos": 35000, "display": "₱350.00" },
+  { "id": "p2", "name": "SIAI Hoodie",          "centavos": 75000, "display": "₱750.00" },
+  { "id": "p3", "name": "SIAI Cap",             "centavos": 20000, "display": "₱200.00" },
+  { "id": "p4", "name": "SIAI Notebook",        "centavos": 15000, "display": "₱150.00" },
+  { "id": "p5", "name": "Canteen Meal Voucher", "centavos": 5000,  "display": "₱50.00"  }
+]

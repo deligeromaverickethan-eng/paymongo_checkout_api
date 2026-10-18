@@ -17,14 +17,26 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 // POST /api/orders - Create a new order
 app.post('/api/orders', async (req, res) => {
+  let order = null;
   try {
     const { items, customer } = req.body;
 
-    if (!items || !items.length) {
+    if (!Array.isArray(items) || !items.length) {
       return res.status(400).json({
         success: false,
         error: 'Order must contain at least one item'
       });
+    }
+
+    // Validate every item BEFORE any order is created
+    for (const item of items) {
+      const qty = item && item.quantity === undefined ? 1 : item && item.quantity;
+      if (!item || typeof item.productId !== 'string' || !item.productId) {
+        return res.status(400).json({ success: false, error: 'Each item needs a productId' });
+      }
+      if (!Number.isInteger(qty) || qty < 1) {
+        return res.status(400).json({ success: false, error: 'Quantity must be a whole number of at least 1' });
+      }
     }
 
     // Validate items and calculate total
@@ -45,7 +57,7 @@ app.post('/api/orders', async (req, res) => {
       }
 
       const product = productResponse.data.product;
-      const quantity = item.quantity || 1;
+      const quantity = item.quantity === undefined ? 1 : item.quantity;
       const amount = product.price * quantity;
 
       orderItems.push({
@@ -61,7 +73,7 @@ app.post('/api/orders', async (req, res) => {
 
     // Create order
     const orderId = `ord_${Date.now()}_${++orderCounter}`;
-    const order = {
+    order = {
       id: orderId,
       items: orderItems,
       customer: customer || { email: 'customer@example.com' },
@@ -109,6 +121,17 @@ app.post('/api/orders', async (req, res) => {
 
   } catch (error) {
     console.error('Order creation error:', error.message);
+
+    // Unknown product: Product Service answered 404
+    if (error.response && error.response.status === 404 && !order) {
+      return res.status(404).json({ success: false, error: 'Product not found' });
+    }
+
+    // Payment failed after the order was saved: never leave it looking payable
+    if (order) {
+      order.status = 'failed';
+      order.updatedAt = new Date().toISOString();
+    }
     res.status(500).json({
       success: false,
       error: 'Failed to create order',
@@ -151,6 +174,15 @@ app.put('/api/orders/:id/status', (req, res) => {
     return res.status(400).json({
       success: false,
       error: 'Invalid status. Must be one of: pending, paid, cancelled, failed'
+    });
+  }
+
+  // paid and cancelled are final: a cancelled order can never become paid
+  if (order.status !== status && (order.status === 'paid' || order.status === 'cancelled')) {
+    return res.status(409).json({
+      success: false,
+      error: `Order is already ${order.status} and cannot become ${status}`,
+      order: order
     });
   }
 
