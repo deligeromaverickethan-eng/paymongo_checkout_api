@@ -12,7 +12,7 @@ describe('Security', () => {
       })
     }).as('createOrder')
 
-    cy.visit('/')
+    cy.visitShop()
     cy.addToCart('SIAI Cap')
     cy.get('[data-cy=checkout-button]').click()
 

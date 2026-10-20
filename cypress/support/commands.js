@@ -28,3 +28,16 @@ Cypress.Commands.add('addToCart', (productName, quantity = 1) => {
       cy.get('[data-cy=add-to-cart]').click()
     })
 })
+
+// The shop needs a login, so tests that start in the shop begin with a logged-in session.
+// (Only the login flow itself is tested through the real login/signup pages: see auth.cy.js)
+Cypress.Commands.add('visitShop', () => {
+  cy.visit('/', {
+    onBeforeLoad(win) {
+      win.sessionStorage.setItem(
+        'siai_session',
+        JSON.stringify({ name: 'Cypress Tester', email: 'cypress@test.local' })
+      )
+    },
+  })
+})

@@ -11,3 +11,4 @@
 | E2E-07 | Checkout failure | `cypress/e2e/checkout.cy.js` | E2E-07: shows a clear error when checkout fails | Payment | |
 | E2E-08 | No secrets | `cypress/e2e/security.cy.js` | E2E-08: keeps the secret key out of the browser | Product | |
 | E2E-09 | Invalid checkout | `cypress/e2e/catalog.cy.js` | E2E-09: blocks checkout with an empty cart | Product | |
+   cd paymongo\product-service

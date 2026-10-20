@@ -2,7 +2,7 @@ describe('Checkout and PayMongo hand-over', () => {
   it('E2E-03: gets a checkout URL from PayMongo', () => {
     cy.intercept('POST', '**/api/orders').as('checkout')
 
-    cy.visit('/')
+    cy.visitShop()
     cy.addToCart('SIAI Cap')
     cy.get('[data-cy=checkout-button]').click()
 
@@ -13,7 +13,7 @@ describe('Checkout and PayMongo hand-over', () => {
   })
 
   it('E2E-04: hands the customer over to PayMongo', () => {
-    cy.visit('/')
+    cy.visitShop()
     cy.addToCart('SIAI Cap')
     cy.get('[data-cy=checkout-button]').click()
 
@@ -31,7 +31,7 @@ describe('Checkout and PayMongo hand-over', () => {
         body: { success: false, error: 'Payment unavailable' },
       }).as('checkout')
 
-      cy.visit('/')
+      cy.visitShop()
       cy.addToCart('SIAI Cap')
       cy.get('[data-cy=checkout-button]').click()
       cy.wait('@checkout')

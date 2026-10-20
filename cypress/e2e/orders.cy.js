@@ -10,7 +10,7 @@ describe('Orders', () => {
       })
     }).as('createOrder')
 
-    cy.visit('/')
+    cy.visitShop()
     cy.addToCart('SIAI T-Shirt', 2) // 2 x 350 = 700
     cy.addToCart('SIAI Cap', 1)     // 1 x 200 = 200
     cy.get('[data-cy=cart-total]').should('have.text', '₱900.00')

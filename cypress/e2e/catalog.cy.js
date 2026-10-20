@@ -4,7 +4,7 @@ const ORDERS = 'http://localhost:3002/api/orders'
 describe('Catalog and cart validation', () => {
   it('E2E-01: shows the catalog with correct peso prices', () => {
     cy.fixture('products').then((products) => {
-      cy.visit('/')
+      cy.visitShop()
       cy.get('[data-cy=product-card]').should('have.length', products.length)
 
       products.forEach((p) => {
@@ -25,7 +25,7 @@ describe('Catalog and cart validation', () => {
 
   it('E2E-09: blocks checkout with an empty cart', () => {
     cy.intercept('POST', '**/api/orders').as('createOrder')
-    cy.visit('/')
+    cy.visitShop()
 
     // 1) UI: empty cart
     cy.get('[data-cy=checkout-button]').click()
